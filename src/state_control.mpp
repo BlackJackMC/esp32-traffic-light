@@ -1,0 +1,86 @@
+#include <Arduino.h>
+#include <array>
+#include <unordered_map>
+
+export module state_control;
+
+using std::array, std::function, std::unordered_map;
+
+using callback = function<void()>;
+
+unordered_map<String, uint64_t> duration = {
+  {"red", 7000},
+  {"red yellow", 3000},
+  {"green", 10000},
+  {"green blink1", 500},
+  {"green blink2", 500},
+  {"green blink3", 500},
+  {"green blink4", 500},
+  {"yellow", 3000}
+};
+const uint8_t STATE_COUNT = 8;
+// const uint64_t state_time[STATE_COUNT] = {7000, 3000, 10000, 2000, 3000};
+
+class state
+{
+public:
+  callback run;
+  String name;
+  uint64_t duration;
+
+  state() {}
+  state(callback run, String name, uint64_t duration) : run(run), name(name), duration(duration) {}
+
+  void set_callback(callback run) { this->run = run; }
+  void set_name(String name) { this->name = name; }
+  void set_duration(uint64_t duration) { this->duration = duration; }
+};
+
+class traffic_light
+{
+private:
+  const state null_state;
+
+public:
+  array<state, STATE_COUNT> state_list;
+  array<uint8_t, 3> LED;
+  uint64_t start_time;
+  uint32_t curr_state;
+  String name;
+
+  traffic_light() {}
+  traffic_light(array<uint8_t, 3> led): start_time(0), curr_state(-1), LED(led), 
+                                        null_state([this](){
+                                          for (const auto &i: LED) digitalWrite(i, LOW);
+                                        }, "null", 0) 
+  {
+    state_list = {
+      state([this](){digitalWrite(LED[2], HIGH);}, "red", duration["red"]),
+      state([this](){digitalWrite(LED[1], HIGH); digitalWrite(LED[2], HIGH);}, "red yellow", duration["red yellow"]),
+      state([this](){digitalWrite(LED[0], HIGH);}, "green", duration["green"]),
+      state([this](){digitalWrite(LED[0], HIGH);}, "green blink1", duration["green blink1"]),
+      state([this](){}, "green blink2", duration["green blink2"]),
+      state([this](){digitalWrite(LED[0], HIGH);}, "green blink3", duration["green blink3"]),
+      state([this](){}, "green blink4", duration["green blink4"]),
+      state([this](){digitalWrite(LED[1], HIGH);}, "yellow", duration["yellow"]),
+    };
+  }
+
+  bool change()
+  {
+    uint64_t curr = millis();
+
+    if (curr_state == -1 or curr - start_time >= state_list[curr_state].duration)
+    {
+      start_time = curr;
+      null_state.run();
+      curr_state = (curr_state + 1) % STATE_COUNT;
+      state_list[curr_state].run();
+      name = state_list[curr_state].name;
+      return true;
+    }
+    return false;
+  }
+};
+
+export traffic_light south({4, 16, 17}), west({5, 18, 19});
