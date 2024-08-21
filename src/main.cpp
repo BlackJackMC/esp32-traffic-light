@@ -6,6 +6,8 @@ using State_control::traffic_light, State_control::state;
 
 const uint8_t STATE_COUNT = 8;
 
+const int buzzer = 13; // Why
+
 std::map<String, uint64_t> duration = {
   {"red", 7000},
   {"red yellow", 3000},
