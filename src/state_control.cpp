@@ -36,7 +36,6 @@ bool traffic_light::change()
     traffic_light::null_state.run();
     curr_state = (curr_state + 1) % state_count;
     state_list[curr_state].run();
-    traffic_light::name = state_list[curr_state].name;
     return true;
   }
   return false;
@@ -44,5 +43,6 @@ bool traffic_light::change()
 
 void traffic_light::set_state(uint32_t start_state) {  curr_state = start_state; }
 void traffic_light::set_time(uint64_t start_time) { this->start_time = start_time; }
-String traffic_light::get_name() { return this->name; }
+String traffic_light::get_name() { return name; }
+String traffic_light::get_state() { return state_list[curr_state].name; }
 

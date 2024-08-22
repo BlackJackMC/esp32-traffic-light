@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STATE_CONTROL_H
+#define STATE_CONTROL_H
 #include <Arduino.h>
 #include <array>
 #include <map>
@@ -40,5 +41,8 @@ namespace State_control
     void set_state(uint32_t);
     void set_time(uint64_t);
     String get_name();
+    String get_state(); 
   };
 }
+
+#endif
