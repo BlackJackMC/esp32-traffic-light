@@ -1,5 +1,6 @@
 #include "state_control.h"
 #include "http_manager.h"
+#include "env.h"
 #include <Arduino.h>
 #include <map>
 
@@ -28,11 +29,11 @@ traffic_light south("south",south_pin, duration), west("west",west_pin, duration
 
 String ssid = "Alterlake";
 String pass = "134567892";
-// String server = "hhtp://lhpsc.click/";
-String server = "http://192.168.105.6:3000";
-String endpoint = "/";
+String server = SERVER_URL;
+String port = SERVER_PORT;
+String endpoint = ENDPOINT;
 
-http_manager manager(server + endpoint);
+http_manager manager(server + ':' + port + endpoint);
 
 /*==================================================*/
 
