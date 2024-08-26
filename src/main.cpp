@@ -27,13 +27,12 @@ traffic_light south("south",south_pin, duration), west("west",west_pin, duration
 
 /*==================================================*/
 
-String ssid = "Alterlake";
-String pass = "134567892";
+String ssid = WIFI_SSID;
+String pass = WIFI_PASS;
 String server = SERVER_URL;
-String port = SERVER_PORT;
 String endpoint = ENDPOINT;
 
-http_manager manager(server + ':' + port + endpoint);
+http_manager manager(server+endpoint);
 
 /*==================================================*/
 
