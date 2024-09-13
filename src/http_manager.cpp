@@ -2,7 +2,7 @@
 #include "env.h"
 // #include <HTTPClient>
 
-using namespace Client_manager;
+using namespace client_manager;
 
 http_manager::http_manager() {}
 http_manager::http_manager(String server) : server_name(server) {}

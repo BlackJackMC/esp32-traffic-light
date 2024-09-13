@@ -5,7 +5,7 @@
 // #include <Wifi.h>
 #include <HTTPClient.h>
 
-namespace Client_manager
+namespace client_manager
 {
     class http_manager 
     {
