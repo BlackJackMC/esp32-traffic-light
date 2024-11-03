@@ -1,7 +1,7 @@
 #ifndef STATE_CONTROL_H
 #define STATE_CONTROL_H
 #include <Arduino.h>
-#include <array>
+#include <vector>
 #include <map>
 
 namespace State_control 
